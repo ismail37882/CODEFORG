@@ -1,328 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CodeForge</title>
-
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="CodeForge Pro">
+<title>CodeForge Pro</title>
 <style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  background:#0f172a;
-  color:#f8fafc;
-}
-header{
-  padding:20px;
-  background:#111827;
-  border-bottom:1px solid #334155;
-}
-h1{margin:0 0 5px;font-size:28px}
-header p{margin:0;color:#94a3b8}
-main{max-width:1100px;margin:auto;padding:18px}
-.toolbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:15px;
-}
-button,select{
-  border:0;
-  border-radius:10px;
-  padding:11px 15px;
-  font-size:15px;
-  background:#2563eb;
-  color:white;
-}
-button.secondary{background:#334155}
-select{background:#334155}
-.editor{
-  background:#020617;
-  border:1px solid #334155;
-  border-radius:12px;
-  overflow:hidden;
-}
-.editor-top{
-  padding:10px 14px;
-  background:#1e293b;
-  color:#cbd5e1;
-}
-textarea{
-  width:100%;
-  height:350px;
-  resize:vertical;
-  border:0;
-  outline:0;
-  padding:16px;
-  background:#020617;
-  color:#e2e8f0;
-  font:15px monospace;
-  line-height:1.5;
-}
-.box{
-  margin-top:15px;
-  background:#111827;
-  border:1px solid #334155;
-  border-radius:12px;
-  padding:16px;
-}
-#errors{white-space:pre-wrap}
-.good{color:#4ade80}
-.bad{color:#f87171}
-.warn{color:#facc15}
-iframe{
-  width:100%;
-  height:350px;
-  border:0;
-  background:white;
-  border-radius:8px;
-}
-.lesson{
-  display:none;
-  line-height:1.6;
-}
-.lesson.active{display:block}
-code{
-  background:#020617;
-  padding:3px 6px;
-  border-radius:5px;
-}
+:root{--bg:#070b16;--panel:#10182a;--panel2:#151f34;--line:#263653;--text:#eef4ff;--muted:#8ea0bd;--blue:#4d8dff;--green:#2bb673;--orange:#e2a33d;--red:#ef6b73;--purple:#9567e8}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:radial-gradient(circle at 20% 0,#182b55 0,#070b16 38%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
+header{height:64px;background:#0d1526ee;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:8px 12px}.brand{font-weight:900;font-size:18px;margin-right:auto;white-space:nowrap}.brand b{color:#70a7ff}.badge{font-size:11px;color:#9bb8e8;background:#162746;border:1px solid #2c4772;padding:4px 7px;border-radius:99px}
+button,select{border:1px solid #344767;border-radius:10px;padding:9px 11px;background:#1b2942;color:white;font-weight:750;font-size:13px}button{cursor:pointer}button:hover{filter:brightness(1.12)}button:active{transform:scale(.98)}.run{background:#18784b;border-color:#269862}.check{background:#855f20}.new{background:#6442a1}.help{background:#26344d}
+.layout{height:calc(100% - 64px);display:grid;grid-template-columns:minmax(360px,48%) 1fr}.editorPane{min-width:0;background:#0d1525;border-right:1px solid var(--line);display:flex;flex-direction:column}.tabs{display:flex;gap:5px;padding:7px;background:#121d31;border-bottom:1px solid var(--line)}.tabs button{flex:1;padding:8px;font-size:12px}.tabs .active{background:#3b5d8d;border-color:#628bc3}
+.codewrap{flex:1;min-height:0;display:flex}.numbers{width:42px;margin:0;padding:13px 7px;background:#09101d;color:#52637f;text-align:right;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;overflow:hidden;user-select:none}.editor{flex:1;min-width:0;resize:none;border:0;outline:0;background:#080e18;color:#dce8fb;padding:13px;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;tab-size:2}
+.bottom{max-height:230px;background:#101a2c;border-top:1px solid var(--line);overflow:auto}.status{padding:9px 12px;color:var(--muted);font-size:12px}.status.ok{color:#73dda5}.status.bad{color:#ff8b93}.diagnostics{padding:0 8px 9px}.diag{padding:9px 10px;margin-top:5px;border-radius:9px;background:#18253b;font-size:12px;line-height:1.4}.diag.error{border-left:3px solid var(--red)}.diag.warn{border-left:3px solid var(--orange)}.diag.info{border-left:3px solid var(--blue)}.diag b{display:block;margin-bottom:2px}
+.previewPane{min-width:0;display:flex;flex-direction:column;background:#0b1220}.previewHead{height:46px;padding:7px 9px;background:#121d31;border-bottom:1px solid var(--line);display:flex;align-items:center}.previewHead strong{margin-right:auto}.previewHead button{font-size:11px}.frameWrap{flex:1;min-height:0;padding:10px}.preview{width:100%;height:100%;border:1px solid var(--line);border-radius:12px;background:white}
+.tutorial{position:fixed;inset:0;background:#000b;z-index:20;display:none;align-items:center;justify-content:center;padding:16px}.tutorial.show{display:flex}.modal{width:min(760px,100%);max-height:90vh;overflow:auto;background:#111d32;border:1px solid #365074;border-radius:18px;box-shadow:0 20px 80px #000c;padding:20px}.modal h2{margin-top:0}.close{float:right}.lesson{background:#18263d;border:1px solid #2b4162;padding:12px;border-radius:12px;margin:9px 0}.lesson b{color:#82b0ff}.tip{color:var(--muted);font-size:12px;margin:10px 0 0}
+@media(max-width:800px){header{height:58px}.badge{display:none}.brand{font-size:15px}.layout{height:calc(100% - 58px);grid-template-columns:1fr;grid-template-rows:58% 42%}.editorPane{border-right:0;border-bottom:1px solid var(--line)}.bottom{max-height:150px}button,select{padding:8px 7px;font-size:11px}.previewPane{min-height:0}}
 </style>
 </head>
-
 <body>
-
 <header>
-  <h1>⚡ CodeForge</h1>
-  <p>Lerne programmieren – du schreibst den Code selbst.</p>
+<div class="brand">🎮 <b>CodeForge</b> Pro <span class="badge">DU BAUST · CODEFORGE PRÜFT</span></div>
+<button class="new" id="newBtn">＋ Neu</button>
+<select id="template"><option value="">Vorlage</option><option value="starter">Starter</option><option value="empire">👑 Empire</option><option value="snake">🐍 Snake</option><option value="clicker">🪙 Clicker</option></select>
+<button class="help" id="tutorialBtn">📚 Tutorial</button><button class="check" id="checkBtn">🧪 Prüfen</button><button id="saveBtn">💾</button><button class="run" id="runBtn">▶ Start</button>
 </header>
-
-<main>
-
-<div class="toolbar">
-  <select id="language">
-    <option value="html">HTML</option>
-    <option value="css">CSS</option>
-    <option value="js">JavaScript</option>
-  </select>
-
-  <button onclick="checkCode()">🔍 Code prüfen</button>
-  <button onclick="runCode()">▶ Vorschau</button>
-  <button class="secondary" onclick="clearCode()">🗑 Löschen</button>
+<div class="layout">
+<section class="editorPane">
+<div class="tabs"><button class="active" data-lang="html">HTML</button><button data-lang="css">CSS</button><button data-lang="js">JavaScript</button></div>
+<div class="codewrap"><pre class="numbers" id="numbers">1</pre><textarea class="editor" id="editor" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea></div>
+<div class="bottom"><div class="status" id="status">Bereit. Dein Code wird nicht automatisch verändert.</div><div class="diagnostics" id="diagnostics"></div></div>
+</section>
+<section class="previewPane">
+<div class="previewHead"><strong>🖥️ Live-Vorschau</strong><button id="clearBtn">↻ Leeren</button></div>
+<div class="frameWrap"><iframe class="preview" id="preview" sandbox="allow-scripts allow-forms allow-modals"></iframe></div>
+</section>
 </div>
 
-<div class="editor">
-  <div class="editor-top">Dein Code</div>
-  <textarea id="code" spellcheck="false"><!DOCTYPE html>
-<html>
-<head>
-<style>
-body {
-  font-family: sans-serif;
-  text-align: center;
-  padding: 40px;
-}
-button {
-  padding: 12px 20px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Meine erste Website</h1>
-<p>Ich lerne programmieren!</p>
-
-<button onclick="hallo()">Klick mich</button>
+<div class="tutorial" id="tutorial">
+<div class="modal">
+<button class="close" id="closeTutorial">✕</button>
+<h2>📚 CodeForge Tutorial</h2>
+<p>CodeForge verändert deinen Code <b>nicht automatisch</b>. Die Prüfung zeigt dir nur, wo ein Problem oder eine mögliche Verbesserung liegt.</p>
+<div class="lesson"><b>1 · HTML – Aufbau</b><br>HTML bestimmt, was in deinem Spiel vorhanden ist. Nutze z. B. <code>&lt;h1&gt;</code>, <code>&lt;button&gt;</code> und <code>&lt;div&gt;</code>.</div>
+<div class="lesson"><b>2 · CSS – Design</b><br>CSS macht dein Spiel schön: Farben, Größen, Abstände, Karten, Buttons und Positionen.</div>
+<div class="lesson"><b>3 · JavaScript – Spielregeln</b><br>JavaScript macht dein Spiel lebendig: Punkte, Geld, Gegner, Käufe, Bewegung und Aktionen.</div>
+<div class="lesson"><b>4 · 🧪 Prüfen</b><br>CodeForge prüft unter anderem HTML-Grundstruktur, Klammern, häufige JavaScript-Syntaxfehler und ob verwendete IDs im HTML vorhanden sind.</div>
+<div class="lesson"><b>5 · ▶ Start</b><br>Nur wenn du Start drückst, wird dein Projekt ausgeführt. Bei einem erkannten JavaScript-Syntaxfehler wird die Vorschau nicht gestartet.</div>
+<div class="lesson"><b>6 · 💾 Speichern</b><br>Speichert deinen aktuellen Code lokal auf diesem Gerät. Er wird nicht automatisch zu GitHub hochgeladen.</div>
+</div></div>
 
 <script>
-function hallo() {
-  alert("Hallo!");
-}
+"use strict";
+const T={
+starter:{
+html:`<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body><h1>Mein Spiel</h1><p id="score">Punkte: 0</p><button id="btn">Punkt</button></body></html>`,
+css:`body{font-family:Arial;text-align:center;padding:35px;background:#18233a;color:white}button{padding:14px 24px;border:0;border-radius:12px;font-size:20px}`,
+js:`let points=0;
+document.getElementById("btn").onclick=()=>{
+points++;
+document.getElementById("score").textContent="Punkte: "+points;
+};`},
+empire:{
+html:`<!doctype html>
+<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body><h1>👑 Mein Imperium</h1><div class="stats">💰 <b id="gold">500</b> · 🌾 <b id="food">100</b> · ⚔️ <b id="army">20</b> · 🗺️ <b id="land">1</b></div><div id="map">🏰</div><button id="farm">🌾 Bauernhof</button><button id="armyBtn">⚔️ Soldaten</button><button id="attack">🗺️ Erobern</button><p id="msg">Baue dein Reich auf.</p></body></html>`,
+css:`body{font-family:Arial;text-align:center;background:#18212b;color:white;padding:18px}.stats{font-size:20px;margin:15px}.map,#map{height:220px;background:#70a85d;border-radius:16px;margin:15px;padding-top:55px;font-size:70px}button{padding:12px;margin:5px;border:0;border-radius:10px;font-weight:bold}`,
+js:`let gold=500,food=100,army=20,land=1;
+const goldEl=document.getElementById("gold"),foodEl=document.getElementById("food"),armyEl=document.getElementById("army"),landEl=document.getElementById("land"),msg=document.getElementById("msg");
+function show(){goldEl.textContent=gold;foodEl.textContent=food;armyEl.textContent=army;landEl.textContent=land}
+document.getElementById("farm").onclick=()=>{if(gold>=50){gold-=50;food+=30;msg.textContent="Bauernhof gebaut!";show()}else msg.textContent="Du brauchst 50 Gold."};
+document.getElementById("armyBtn").onclick=()=>{if(gold>=100){gold-=100;army+=10;msg.textContent="10 Soldaten rekrutiert!";show()}else msg.textContent="Du brauchst 100 Gold."};
+document.getElementById("attack").onclick=()=>{if(army>=30){army-=30;land++;gold+=120;msg.textContent="Gebiet erobert!";show()}else msg.textContent="Du brauchst 30 Soldaten."};
+show();`},
+snake:{
+html:`<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><h2>🐍 Snake</h2><canvas id="game" width="300" height="300"></canvas><div><button data-d="up">⬆️</button><br><button data-d="left">⬅️</button><button data-d="down">⬇️</button><button data-d="right">➡️</button></div></body></html>`,
+css:`body{font-family:Arial;background:#111;color:white;text-align:center}canvas{background:#20502e;max-width:90vw}button{padding:12px;margin:4px;font-size:18px}`,
+js:`const canvas=document.getElementById("game"),ctx=canvas.getContext("2d"),cell=20,size=15;
+let snake=[[7,7]],dir=[1,0],food=[3,3],running=true;
+function loop(){if(!running)return;const h=[snake[0][0]+dir[0],snake[0][1]+dir[1]];if(h[0]<0||h[0]>=size||h[1]<0||h[1]>=size||snake.some(p=>p[0]===h[0]&&p[1]===h[1])){running=false;return}snake.unshift(h);if(h[0]===food[0]&&h[1]===food[1])food=[Math.floor(Math.random()*size),Math.floor(Math.random()*size)];else snake.pop();ctx.clearRect(0,0,300,300);ctx.fillStyle="#7ee081";snake.forEach(p=>ctx.fillRect(p[0]*cell,p[1]*cell,cell-2,cell-2));ctx.fillStyle="#ffd35a";ctx.fillRect(food[0]*cell,food[1]*cell,cell-2,cell-2)}
+document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{const z={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[b.dataset.d];if(z[0]!==-dir[0]||z[1]!==-dir[1])dir=z});setInterval(loop,130);`},
+clicker:{
+html:`<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><h1>🪙 Coin Empire</h1><h2>💰 <span id="g">0</span></h2><button id="coin">💰 Sammeln</button><button id="upgrade">⚡ Upgrade (20)</button><p>Pro Klick: <span id="power">1</span></p></body></html>`,
+css:`body{font-family:Arial;text-align:center;background:#202a44;color:white;padding:30px}button{font-size:22px;padding:18px;border:0;border-radius:15px;margin:8px}`,
+js:`let g=0,power=1;const gs=document.getElementById("g"),ps=document.getElementById("power");function show(){gs.textContent=g;ps.textContent=power}document.getElementById("coin").onclick=()=>{g+=power;show()};document.getElementById("upgrade").onclick=()=>{if(g>=20){g-=20;power++;show()}};show();`}
+};
+let files={html:T.starter.html,css:T.starter.css,js:T.starter.js},cur="html";
+const ed=document.getElementById("editor"),nums=document.getElementById("numbers"),diag=document.getElementById("diagnostics"),status=document.getElementById("status"),frame=document.getElementById("preview");
+function sync(){files[cur]=ed.value;nums.textContent=Array.from({length:Math.max(1,ed.value.split("\n").length)},(_,i)=>i+1).join("\n")}
+function load(){ed.value=files[cur];sync()}
+function esc(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function add(a,type,title,text){a.push({type,title,text})}
+function check(){
+sync();const a=[];
+if(!files.html.trim())add(a,"error","HTML leer","Dein HTML-Feld ist leer.");
+if(files.html.trim()&&!/<!doctype\s+html/i.test(files.html))add(a,"warn","DOCTYPE fehlt","Empfohlen: <!doctype html> am Anfang.");
+if(!/<html[\s>]/i.test(files.html))add(a,"error","<html> fehlt","Das HTML-Grundelement wurde nicht gefunden.");
+if(!/<body[\s>]/i.test(files.html))add(a,"warn","<body> fehlt","Prüfe, ob dein sichtbarer Inhalt in <body> liegt.");
+const pairs=[["{","}","Geschweifte Klammern"],["(",")","Runde Klammern"],["[","]","Eckige Klammern"]];
+pairs.forEach(([x,y,n])=>{const c1=(files.js.match(new RegExp("\\"+x,"g"))||[]).length,c2=(files.js.match(new RegExp("\\"+y,"g"))||[]).length;if(c1!==c2)add(a,"error",n+" stimmen nicht","Es gibt "+c1+" × "+x+" und "+c2+" × "+y+".")});
+try{new Function(files.js);add(a,"info","JavaScript-Syntax","Keine grundlegenden JavaScript-Syntaxfehler gefunden.")}catch(e){add(a,"error","JavaScript-Syntaxfehler",String(e.message||e))}
+const ids=[...files.js.matchAll(/(?:getElementById|querySelector)\(\s*["']#?([^"']+)["']\s*\)/g)].map(m=>m[1]).filter(x=>/^[A-Za-z][\w-]*$/.test(x));
+[...new Set(ids)].forEach(id=>{if(!new RegExp('id=["\\\']'+id+'["\\\']','i').test(files.html))add(a,"warn","Element fehlt","#"+id+" wird in JavaScript verwendet, aber nicht im HTML gefunden.")});
+if(/document\.getElementById\(["'][^"']+["']\)/.test(files.js)&&!files.html.includes("id="))add(a,"warn","IDs prüfen","JavaScript sucht nach IDs. Prüfe, ob die passenden id=\"...\"-Elemente im HTML vorhanden sind.");
+if(!a.length)add(a,"info","Alles sieht gut aus","Keine der eingebauten Prüfungen hat ein Problem gefunden.");
+diag.innerHTML=a.map(x=>'<div class="diag '+x.type+'"><b>'+({"error":"❌ ","warn":"⚠️ ","info":"ℹ️ "}[x.type])+esc(x.title)+'</b>'+esc(x.text)+'</div>').join("");
+const bad=a.some(x=>x.type==="error");status.textContent=bad?"Prüfung beendet: Fehler gefunden.":"Prüfung beendet: keine blockierenden Fehler gefunden.";status.className="status "+(bad?"bad":"ok");return !bad}
+function build(){return files.html.replace(/<\/head>/i,"<style>"+files.css+"</style></head>").replace(/<\/body>/i,"<script>"+files.js.replace(/<\/script>/gi,"<\\/script>")+"<\/script></body>")}
+function run(){if(!check())return;frame.srcdoc=build();status.textContent="✓ Dein Code läuft jetzt in der Vorschau.";status.className="status ok"}
+function save(){sync();Object.keys(files).forEach(k=>localStorage.setItem("cfp2_"+k,files[k]));status.textContent="✓ Projekt lokal gespeichert.";status.className="status ok"}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{sync();cur=b.dataset.lang;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("active",x===b));load()});
+ed.oninput=()=>{files[cur]=ed.value;nums.textContent=Array.from({length:Math.max(1,ed.value.split("\n").length)},(_,i)=>i+1).join("\n")};
+ed.onscroll=()=>nums.scrollTop=ed.scrollTop;
+document.getElementById("checkBtn").onclick=check;document.getElementById("runBtn").onclick=run;document.getElementById("saveBtn").onclick=save;
+document.getElementById("clearBtn").onclick=()=>{frame.srcdoc="";status.textContent="Vorschau geleert.";status.className="status"};
+document.getElementById("newBtn").onclick=()=>{if(confirm("Leeres Projekt erstellen?")){files={html:'<!doctype html>\n<html lang="de">\n<head><meta charset="utf-8"></head>\n<body>\n<h1>Mein Spiel</h1>\n</body>\n</html>',css:"",js:""};cur="html";load();check()}};
+document.getElementById("template").onchange=e=>{const v=e.target.value;if(v){files={html:T[v].html,css:T[v].css,js:T[v].js};cur="html";load();check()}e.target.value=""};
+document.getElementById("tutorialBtn").onclick=()=>document.getElementById("tutorial").classList.add("show");
+document.getElementById("closeTutorial").onclick=()=>document.getElementById("tutorial").classList.remove("show");
+load();check();
 </script>
 
-</body>
-</html></textarea>
+<style>
+/* CodeForge Plus: geführtes Tutorial + Projektverwaltung */
+#cfPlus{position:fixed;inset:0;z-index:100;background:rgba(3,7,18,.86);display:none;align-items:center;justify-content:center;padding:14px}
+#cfPlus.show{display:flex}
+.cfCard{width:min(760px,96vw);max-height:92vh;overflow:auto;background:#101b30;border:1px solid #4c6b99;border-radius:22px;box-shadow:0 25px 90px #000; padding:20px}
+.cfIntro{text-align:center}
+.cfIntro h2{font-size:28px;margin:8px 0}
+.cfIntro p{color:#b7c5dc;line-height:1.5}
+.cfTimer{font-size:42px;font-weight:900;margin:14px}
+.cfBtn{border:0;border-radius:12px;padding:11px 15px;background:#2d70d6;color:#fff;font-weight:800;margin:4px;cursor:pointer}
+.cfBtn.alt{background:#34445f}.cfBtn.danger{background:#a33a46}.cfBtn:disabled{opacity:.45}
+.cfGuide{display:none}
+.cfGuide.show{display:block}
+.cfTop{display:flex;align-items:center;gap:10px}.cfTop h2{margin:0;flex:1}
+.cfProgress{height:8px;background:#24324b;border-radius:20px;overflow:hidden;margin:12px 0}.cfProgress i{display:block;height:100%;background:#4e91ff;width:0}
+.cfBubble{background:#1b2b47;border:1px solid #38547b;border-radius:16px;padding:16px;line-height:1.55}
+.cfBubble strong{font-size:18px}
+.cfArrow{font-size:32px;margin:6px 0}
+.cfActions{text-align:right;margin-top:14px}
+.cfHint{color:#8fa3c2;font-size:12px}
+#cfProjects{display:none;position:fixed;inset:0;z-index:90;background:rgba(3,7,18,.86);align-items:center;justify-content:center;padding:14px}
+#cfProjects.show{display:flex}
+.cfProject{display:flex;align-items:center;gap:8px;background:#1a2942;border:1px solid #314968;padding:11px;border-radius:12px;margin:8px 0}
+.cfProjectName{flex:1;font-weight:800}.cfEmpty{color:#9db0ca;padding:15px 0}
+#projectsBtn{background:#34445f}
+</style>
+
+<div id="cfPlus">
+ <div class="cfCard">
+  <div id="cfIntro" class="cfIntro">
+   <div style="font-size:48px">🎓</div>
+   <h2>Dein CodeForge-Tutorial</h2>
+   <p>Wir bauen gemeinsam ein <b>sehr einfaches Punkt-Spiel</b>.<br>
+   Du bekommst bei jedem Schritt eine ganz genaue Erklärung, was du anklicken musst.</p>
+   <div class="cfTimer" id="cfTimer">10</div>
+   <p id="cfSkipInfo">Überspringen wird gleich möglich …</p>
+   <button class="cfBtn" id="cfStart">Tutorial starten</button>
+   <button class="cfBtn alt" id="cfSkip" disabled>Überspringen</button>
+  </div>
+  <div id="cfGuide" class="cfGuide">
+   <div class="cfTop"><h2 id="cfStepTitle">Schritt</h2><button class="cfBtn alt" id="cfGuideClose">✕</button></div>
+   <div class="cfProgress"><i id="cfProgress"></i></div>
+   <div class="cfBubble" id="cfBubble"></div>
+   <div class="cfActions">
+    <button class="cfBtn alt" id="cfPrev">← Zurück</button>
+    <button class="cfBtn" id="cfNext">Weiter →</button>
+   </div>
+  </div>
+ </div>
 </div>
 
-<div class="box">
-  <h2>🔍 Fehlerprüfung</h2>
-  <div id="errors">
-    Klicke auf „Code prüfen“.
-  </div>
+<div id="cfProjects">
+ <div class="cfCard">
+  <div class="cfTop"><h2>📁 Meine Projekte</h2><button class="cfBtn alt" id="cfProjectsClose">✕</button></div>
+  <p class="cfHint">Gespeicherte Projekte liegen nur auf diesem Gerät. Du kannst sie öffnen oder löschen.</p>
+  <button class="cfBtn" id="cfSaveProject">💾 Aktuelles Projekt speichern</button>
+  <div id="cfProjectList"></div>
+ </div>
 </div>
-
-<div class="box">
-  <h2>▶ Vorschau</h2>
-  <iframe id="preview" sandbox="allow-scripts"></iframe>
-</div>
-
-<div class="box">
-  <h2>📚 Tutorial</h2>
-
-  <select onchange="showLesson(this.value)">
-    <option value="html">HTML Grundlagen</option>
-    <option value="css">CSS Grundlagen</option>
-    <option value="js">JavaScript Grundlagen</option>
-    <option value="fehler">Fehler finden</option>
-  </select>
-
-  <div id="html" class="lesson active">
-    <h3>HTML</h3>
-    <p>HTML beschreibt den Aufbau einer Website.</p>
-    <p><code>&lt;h1&gt;Hallo&lt;/h1&gt;</code> erzeugt eine Überschrift.</p>
-    <p><code>&lt;p&gt;Text&lt;/p&gt;</code> erzeugt einen Absatz.</p>
-    <p><code>&lt;button&gt;Klick&lt;/button&gt;</code> erzeugt einen Button.</p>
-  </div>
-
-  <div id="css" class="lesson">
-    <h3>CSS</h3>
-    <p>CSS verändert das Aussehen deiner Website.</p>
-    <p>Zum Beispiel:</p>
-    <p><code>color: red;</code></p>
-    <p>Damit wird Text rot.</p>
-  </div>
-
-  <div id="js" class="lesson">
-    <h3>JavaScript</h3>
-    <p>JavaScript macht deine Website interaktiv.</p>
-    <p>Zum Beispiel:</p>
-    <p><code>alert("Hallo");</code></p>
-    <p>Damit erscheint eine Meldung.</p>
-  </div>
-
-  <div id="fehler" class="lesson">
-    <h3>Fehler finden</h3>
-    <p>CodeForge repariert deinen Code nicht automatisch.</p>
-    <p>Es zeigt dir nur mögliche Fehler und Hinweise.</p>
-    <p>Du entscheidest selbst, was du ändern möchtest.</p>
-  </div>
-</div>
-
-</main>
 
 <script>
+/* Zusatzfunktionen: absichtlich getrennt vom Editor, damit der vorhandene Code erhalten bleibt. */
+(function(){
+"use strict";
+const plus=document.getElementById("cfPlus"),intro=document.getElementById("cfIntro"),guide=document.getElementById("cfGuide");
+const timerEl=document.getElementById("cfTimer"),skip=document.getElementById("cfSkip"),start=document.getElementById("cfStart");
+let left=10, step=0, timer=null;
 
-const codeBox = document.getElementById("code");
-const preview = document.getElementById("preview");
-const errors = document.getElementById("errors");
+const steps=[
+ ["1 · Neues Projekt öffnen","Tippe zuerst auf **„＋ Neu“** oben links. Bestätige danach das Fenster mit **OK**. Damit bekommst du ein komplett leeres Projekt.","👉 Suche oben links nach „＋ Neu“.",""],
+ ["2 · HTML öffnen","Tippe jetzt oben im Editor auf **„HTML“**. HTML ist der Teil, der festlegt, welche Elemente dein Spiel besitzt.","👉 Klicke auf den Tab „HTML“.",""],
+ ["3 · Unser Spiel schreiben","Tippe in den Editor und schreibe diese drei Dinge: eine Überschrift, einen Punktestand und einen Button. Beispiel: **&lt;h1&gt;Mein Spiel&lt;/h1&gt;**, **&lt;p id=\"punkte\"&gt;Punkte: 0&lt;/p&gt;**, **&lt;button id=\"knopf\"&gt;Punkt&lt;/button&gt;**.","👉 Der große Bereich in der Mitte ist dein Code-Editor.",""],
+ ["4 · CSS gestalten","Tippe auf **„CSS“**. CSS bestimmt das Aussehen. Für den Anfang reicht z. B. **body { text-align:center; }**. Du musst CSS nicht sofort perfekt können.","👉 Oben im Editor auf „CSS“ tippen.",""],
+ ["5 · JavaScript programmieren","Tippe auf **„JavaScript“**. JavaScript macht aus der Seite ein Spiel. Du kannst zum Beispiel eine Variable für Punkte erstellen und beim Button-Klick erhöhen.","👉 Oben im Editor auf „JavaScript“ tippen.",""],
+ ["6 · Code prüfen","Jetzt kommt der wichtigste Knopf: **„🧪 Prüfen“**. CodeForge verändert deinen Code nicht. Es zeigt dir Fehler, Warnungen und Hinweise. Lies die Meldung und ändere den Code selbst.","👉 Oben auf „🧪 Prüfen“ tippen.",""],
+ ["7 · Spiel starten","Wenn die Prüfung keine blockierenden Fehler meldet, tippe auf **„▶ Start“**. Rechts erscheint deine Vorschau. Wenn du den Button in deinem Spiel anklickst, sollte deine eigene Spiel-Logik laufen.","👉 Oben rechts auf „▶ Start“ tippen.",""],
+ ["8 · Projekt speichern","Wenn du zufrieden bist, kannst du dein Projekt speichern. Verwende dafür **💾** oder später **📁 Projekte**. Gespeicherte Projekte können wieder geöffnet oder gelöscht werden.","👉 Suche oben nach „💾“ bzw. „📁 Projekte“.",""],
+ ["9 · Geschafft!","Du hast jetzt den Grundablauf gelernt: **HTML → CSS → JavaScript → Prüfen → Start → Speichern**. Danach kannst du selbst schwierigere Spiele bauen, zum Beispiel ein Empire-Spiel.","🎮 Jetzt kannst du selbst weiterbauen!",""]
+];
 
-function checkCode(){
-
-  const code = codeBox.value;
-  const language = document.getElementById("language").value;
-
-  let messages = [];
-
-  if(code.trim().length === 0){
-    messages.push("❌ Dein Code ist leer.");
-  }
-
-  if(language === "html"){
-
-    if(!code.includes("<html") && !code.includes("<!DOCTYPE")){
-      messages.push("⚠️ Hinweis: Es fehlt möglicherweise ein HTML-Grundgerüst.");
-    }
-
-    const opens = (code.match(/</g)||[]).length;
-    const closes = (code.match(/>/g)||[]).length;
-
-    if(opens !== closes){
-      messages.push("❌ Möglicherweise fehlt ein < oder >.");
-    }
-
-    const tags = ["html","head","body"];
-
-    tags.forEach(tag=>{
-      const open = code.match(new RegExp("<"+tag+"\\b","gi"));
-      const close = code.match(new RegExp("</"+tag+">","gi"));
-
-      if(open && (!close || open.length !== close.length)){
-        messages.push("❌ Möglicherweise ist <"+tag+"> nicht richtig geschlossen.");
-      }
-    });
-
-  }
-
-  if(language === "css"){
-
-    const open = (code.match(/{/g)||[]).length;
-    const close = (code.match(/}/g)||[]).length;
-
-    if(open !== close){
-      messages.push("❌ Bei CSS stimmen { und } wahrscheinlich nicht überein.");
-    }
-
-    if(code.includes(":") && !code.includes(";")){
-      messages.push("⚠️ Prüfe, ob nach deinen CSS-Eigenschaften ; stehen.");
-    }
-  }
-
-  if(language === "js"){
-
-    const open = (code.match(/{/g)||[]).length;
-    const close = (code.match(/}/g)||[]).length;
-
-    if(open !== close){
-      messages.push("❌ Bei JavaScript stimmen { und } wahrscheinlich nicht überein.");
-    }
-
-    const roundOpen = (code.match(/\(/g)||[]).length;
-    const roundClose = (code.match(/\)/g)||[]).length;
-
-    if(roundOpen !== roundClose){
-      messages.push("❌ Bei JavaScript stimmen ( und ) wahrscheinlich nicht überein.");
-    }
-  }
-
-  if(messages.length === 0){
-    errors.innerHTML =
-      '<span class="good">✅ Keine einfachen Fehler gefunden.</span><br><br>' +
-      'Das bedeutet nicht, dass der Code garantiert fehlerfrei ist. ' +
-      'Komplexe Fehler können trotzdem vorhanden sein.';
-  }else{
-    errors.innerHTML = messages.map(x=>x).join("\n\n");
-  }
+function openTutorial(){
+ plus.classList.add("show"); intro.style.display="block"; guide.classList.remove("show");
+ left=10; timerEl.textContent=left; skip.disabled=true;
+ clearInterval(timer);
+ timer=setInterval(()=>{left--;timerEl.textContent=left;
+   if(left<=0){clearInterval(timer);skip.disabled=false;document.getElementById("cfSkipInfo").textContent="Du kannst das Tutorial jetzt überspringen."; }
+ },1000);
 }
-
-function runCode(){
-
-  const language = document.getElementById("language").value;
-  const code = codeBox.value;
-
-  if(language === "html"){
-    preview.srcdoc = code;
-  }else{
-    preview.srcdoc =
-      "<!DOCTYPE html><html><head><style>" +
-      (language==="css" ? code : "") +
-      "</style></head><body>" +
-      (language==="js" ? "<script>"+code+"<\/script>" : "") +
-      "</body></html>";
-  }
+function closeTutorial(){clearInterval(timer);plus.classList.remove("show")}
+function render(){
+ const x=steps[step];
+ document.getElementById("cfStepTitle").textContent=x[0];
+ document.getElementById("cfBubble").innerHTML="<strong>"+x[1]+"</strong><div class='cfArrow'>"+x[2]+"</div><div class='cfHint'>Schritt "+(step+1)+" von "+steps.length+"</div>";
+ document.getElementById("cfProgress").style.width=((step+1)/steps.length*100)+"%";
+ document.getElementById("cfPrev").disabled=step===0;
+ document.getElementById("cfNext").textContent=step===steps.length-1?"Fertig ✓":"Weiter →";
 }
+start.onclick=()=>{clearInterval(timer);intro.style.display="none";guide.classList.add("show");step=0;render()};
+skip.onclick=closeTutorial;
+document.getElementById("cfGuideClose").onclick=closeTutorial;
+document.getElementById("cfPrev").onclick=()=>{if(step>0){step--;render()}};
+document.getElementById("cfNext").onclick=()=>{if(step<steps.length-1){step++;render()}else closeTutorial()};
+document.getElementById("tutorialBtn").addEventListener("click",openTutorial);
 
-function clearCode(){
-  if(confirm("Code wirklich löschen?")){
-    codeBox.value="";
-    errors.innerHTML="Code gelöscht.";
-    preview.srcdoc="";
-  }
+/* Projektverwaltung */
+const pm=document.getElementById("cfProjects"), list=document.getElementById("cfProjectList");
+function getProjects(){try{return JSON.parse(localStorage.getItem("cfp_projects")||"[]")}catch(e){return[]}}
+function setProjects(a){localStorage.setItem("cfp_projects",JSON.stringify(a))}
+function showProjects(){renderProjects();pm.classList.add("show")}
+function renderProjects(){
+ const a=getProjects(); list.innerHTML="";
+ if(!a.length){list.innerHTML='<div class="cfEmpty">Noch keine gespeicherten Projekte.</div>';return}
+ a.forEach((p,i)=>{
+  const row=document.createElement("div");row.className="cfProject";
+  const name=document.createElement("div");name.className="cfProjectName";name.textContent=p.name;
+  const open=document.createElement("button");open.className="cfBtn";open.textContent="Öffnen";
+  open.onclick=()=>{files={html:p.html,css:p.css,js:p.js};cur="html";load();check();pm.classList.remove("show");status.textContent="✓ Projekt „"+p.name+"“ geöffnet.";status.className="status ok"};
+  const del=document.createElement("button");del.className="cfBtn danger";del.textContent="Löschen";
+  del.onclick=()=>{if(confirm("Projekt „"+p.name+"“ wirklich löschen?")){a.splice(i,1);setProjects(a);renderProjects()}};
+  row.append(name,open,del);list.appendChild(row);
+ });
 }
-
-function showLesson(id){
-
-  document.querySelectorAll(".lesson").forEach(x=>{
-    x.classList.remove("active");
-  });
-
-  document.getElementById(id).classList.add("active");
-}
-
-checkCode();
-runCode();
-
+document.getElementById("cfProjectsClose").onclick=()=>pm.classList.remove("show");
+document.getElementById("cfSaveProject").onclick=()=>{
+ sync(); const name=prompt("Wie soll dein Projekt heißen?","Mein Spiel");
+ if(!name||!name.trim())return;
+ const a=getProjects();a.push({name:name.trim(),html:files.html,css:files.css,js:files.js,date:Date.now()});setProjects(a);
+ status.textContent="✓ Projekt „"+name.trim()+"“ gespeichert.";status.className="status ok";renderProjects();
+};
+const pb=document.createElement("button");pb.id="projectsBtn";pb.textContent="📁 Projekte";pb.onclick=showProjects;
+document.querySelector("header").insertBefore(pb,document.getElementById("tutorialBtn"));
+})();
 </script>
 
 </body>
