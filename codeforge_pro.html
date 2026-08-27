@@ -1,0 +1,79 @@
+<!doctype html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="CodeForge Pro">
+<title>CodeForge Pro</title>
+<style>
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:#0b1020;color:#edf3ff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow:hidden}
+header{height:58px;background:#121b2d;display:flex;align-items:center;gap:6px;padding:7px;border-bottom:1px solid #ffffff18}.logo{font-weight:900;margin-right:auto}.logo span{color:#63a4ff}
+button,select{border:0;border-radius:9px;padding:9px;background:#273650;color:white;font-weight:700}button:active{transform:scale(.98)}.run{background:#20884d}.test{background:#98722e}.new{background:#7650a4}
+.main{height:calc(100% - 58px);display:grid;grid-template-columns:45% 55%}.left,.right{min-width:0;display:flex;flex-direction:column}.left{background:#10182a;border-right:1px solid #ffffff18}
+.tabs{height:42px;display:flex;gap:5px;padding:6px;background:#172239}.tabs button{flex:1;padding:6px;font-size:12px}.tabs .on{background:#46658d}
+.wrap{flex:1;display:flex;min-height:0}.nums{width:40px;background:#0d1422;color:#64738a;padding:12px 6px;text-align:right;font:13px/1.5 monospace;overflow:hidden}textarea{flex:1;min-width:0;border:0;outline:0;resize:none;background:#090f19;color:#dce9ff;padding:12px;font:13px/1.5 monospace}
+.bottom{background:#111a2b;border-top:1px solid #ffffff18}.status{padding:8px;font-size:12px;color:#a9b8cf}.ok{color:#7bd59c!important}.bad{color:#ff9292!important}.diag{max-height:140px;overflow:auto;padding:6px}.diag div{padding:5px;margin:3px 0;background:#1b2840;border-radius:7px;font-size:12px}.error{color:#ff9999}.warn{color:#ffd27c}.info{color:#a9c8ff}
+.phead{height:42px;background:#172239;padding:6px;display:flex;align-items:center}.phead b{margin-right:auto}.phead button{font-size:12px}iframe{flex:1;border:0;background:white}
+.modal{display:none;position:fixed;inset:0;background:#000a;z-index:10;align-items:center;justify-content:center;padding:15px}.modal.show{display:flex}.box{max-width:700px;max-height:90vh;overflow:auto;background:#18243a;padding:18px;border-radius:18px}.step{background:#22314a;padding:10px;margin:8px 0;border-radius:10px}.close{float:right}
+@media(max-width:760px){.main{grid-template-columns:1fr}.left{height:60%;border-right:0;border-bottom:1px solid #ffffff18}.right{height:40%}.logo{font-size:14px}header button,header select{font-size:10px;padding:8px 5px}}
+</style></head><body>
+<header><div class="logo">🎮 <span>CodeForge Pro</span></div><button class="new" id="new">＋ Neu</button>
+<select id="templates"><option value="">Vorlage</option><option value="starter">Starter</option><option value="empire">Empire</option><option value="snake">Snake</option></select>
+<button id="tutorial">📚 Tutorial</button><button class="test" id="check">🧪 Prüfen</button><button id="save">💾</button><button class="run" id="run">▶ Start</button></header>
+<div class="main"><section class="left"><div class="tabs"><button class="on" data-f="html">HTML</button><button data-f="css">CSS</button><button data-f="js">JavaScript</button></div>
+<div class="wrap"><pre class="nums" id="nums">1</pre><textarea id="editor" autocapitalize="off" autocorrect="off" spellcheck="false"></textarea></div>
+<div class="bottom"><div id="status" class="status">Bereit. Dein Code wird nicht automatisch verändert.</div><div id="diag" class="diag"></div></div></section>
+<section class="right"><div class="phead"><b>🖥️ Vorschau</b><button id="clear">↻ Leeren</button></div><iframe id="preview" sandbox="allow-scripts allow-forms allow-modals"></iframe></section></div>
+<div class="modal" id="modal"><div class="box"><button class="close" id="close">✕</button><h2>📚 Tutorial</h2>
+<p><b>CodeForge Pro repariert deinen Code nicht.</b> Du schreibst ihn selbst. Die Prüffunktion zeigt nur Fehler und Hinweise.</p>
+<div class="step"><b>1 · HTML</b><br>Baue deine Spielseite mit Überschriften, Buttons, Bildern und anderen Elementen.</div>
+<div class="step"><b>2 · CSS</b><br>Gestalte dein Spiel: Farben, Größen, Abstände und Positionen.</div>
+<div class="step"><b>3 · JavaScript</b><br>Programmiere Regeln, Punkte, Gegner, Bewegung und alles, was dein Spiel tun soll.</div>
+<div class="step"><b>4 · 🧪 Prüfen</b><br>CodeForge sucht unter anderem nach JavaScript-Syntaxfehlern und fehlenden HTML-Elementen.</div>
+<div class="step"><b>5 · ▶ Start</b><br>Nur du entscheidest, wann dein Code ausgeführt wird.</div>
+<div class="step"><b>6 · 💾 Speichern</b><br>Speichert dein Projekt lokal auf diesem Gerät.</div></div></div>
+<script>
+"use strict";
+const V={
+starter:{
+html:'<!doctype html>\n<html lang="de">\n<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>\n<body><h1>Mein Spiel</h1><p id="score">Punkte: 0</p><button id="btn">Punkt</button></body>\n</html>',
+css:'body{font-family:Arial;text-align:center;padding:30px;background:#18233a;color:white}button{padding:14px 22px;border:0;border-radius:12px;font-size:20px}',
+js:'let points=0;\ndocument.getElementById("btn").addEventListener("click",function(){\n points++;\n document.getElementById("score").textContent="Punkte: "+points;\n});'
+},
+empire:{
+html:'<!doctype html>\n<html lang="de">\n<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>\n<body><h1>👑 Mein Imperium</h1><p>💰 <b id="gold">500</b> · 🌾 <b id="food">100</b> · ⚔️ <b id="army">20</b> · 🗺️ <b id="land">1</b></p><div id="map">🏰</div><button id="farm">🌾 Bauernhof</button><button id="armyBtn">⚔️ Soldaten</button><button id="attack">🗺️ Erobern</button><p id="msg">Baue dein Reich auf.</p></body>\n</html>',
+css:'body{font-family:Arial;text-align:center;background:#18212b;color:white;padding:18px}#map{height:230px;background:#72ad5d;border-radius:14px;margin:15px;padding-top:60px;font-size:70px}button{padding:12px;margin:5px;border:0;border-radius:10px;font-weight:bold}',
+js:'let gold=500,food=100,army=20,land=1;\nfunction show(){goldEl.textContent=gold;foodEl.textContent=food;armyEl.textContent=army;landEl.textContent=land}\nconst goldEl=document.getElementById("gold"),foodEl=document.getElementById("food"),armyEl=document.getElementById("army"),landEl=document.getElementById("land");\ndocument.getElementById("farm").onclick=()=>{if(gold>=50){gold-=50;food+=30;msg.textContent="Bauernhof gebaut!";show()}};\ndocument.getElementById("armyBtn").onclick=()=>{if(gold>=100){gold-=100;army+=10;msg.textContent="10 Soldaten rekrutiert!";show()}};\ndocument.getElementById("attack").onclick=()=>{if(army>=30){army-=30;land++;gold+=120;msg.textContent="Gebiet erobert!";show()}else msg.textContent="Du brauchst 30 Soldaten."};\nconst msg=document.getElementById("msg");show();'
+},
+snake:{
+html:'<!doctype html>\n<html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>\n<body><h2>🐍 Snake</h2><canvas id="game" width="300" height="300"></canvas><div><button data-d="up">⬆️</button><br><button data-d="left">⬅️</button><button data-d="down">⬇️</button><button data-d="right">➡️</button></div></body></html>',
+css:'body{font-family:Arial;background:#111;color:white;text-align:center}canvas{background:#20502e;max-width:90vw}button{padding:12px;margin:4px;font-size:18px}',
+js:'const canvas=document.getElementById("game"),ctx=canvas.getContext("2d"),cell=20,size=15;\nlet snake=[[7,7]],dir=[1,0],food=[3,3],running=true;\nfunction loop(){if(!running)return;const h=[snake[0][0]+dir[0],snake[0][1]+dir[1]];if(h[0]<0||h[0]>=size||h[1]<0||h[1]>=size||snake.some(p=>p[0]===h[0]&&p[1]===h[1])){running=false;return}snake.unshift(h);if(h[0]===food[0]&&h[1]===food[1])food=[Math.floor(Math.random()*size),Math.floor(Math.random()*size)];else snake.pop();ctx.clearRect(0,0,300,300);ctx.fillStyle="#7ee081";snake.forEach(p=>ctx.fillRect(p[0]*cell,p[1]*cell,cell-2,cell-2));ctx.fillStyle="#ffd35a";ctx.fillRect(food[0]*cell,food[1]*cell,cell-2,cell-2)}\ndocument.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{const z={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[b.dataset.d];if(z[0]!==-dir[0]||z[1]!==-dir[1])dir=z});setInterval(loop,130);'
+}};
+let files={html:localStorage.getItem("cfp_html")||V.starter.html,css:localStorage.getItem("cfp_css")||V.starter.css,js:localStorage.getItem("cfp_js")||V.starter.js},cur="html";
+const ed=document.getElementById("editor"),nums=document.getElementById("nums"),diag=document.getElementById("diag"),status=document.getElementById("status"),frame=document.getElementById("preview");
+function sync(){files[cur]=ed.value;nums.textContent=Array.from({length:Math.max(1,ed.value.split("\n").length)},(_,i)=>i+1).join("\n")}
+function load(){ed.value=files[cur];sync()}
+function escape(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function check(){
+ sync();let a=[];
+ if(!files.html.trim())a.push(["error","HTML ist leer."]);
+ if(!/<html[\s>]/i.test(files.html))a.push(["warn","HTML: <html> fehlt."]);
+ if(!/<body[\s>]/i.test(files.html))a.push(["warn","HTML: <body> fehlt."]);
+ try{new Function(files.js);a.push(["info","JavaScript-Syntax ist korrekt."])}catch(e){a.push(["error","JavaScript-Syntaxfehler: "+e.message])}
+ const ids=[...files.js.matchAll(/getElementById\(["']([^"']+)["']\)/g)].map(m=>m[1]);
+ [...new Set(ids)].forEach(id=>{if(!new RegExp('id=["\\\']'+id+'["\\\']','i').test(files.html))a.push(["warn",'JavaScript verwendet #'+id+', aber das Element fehlt im HTML.'])});
+ diag.innerHTML=a.length?a.map(x=>'<div class="'+x[0]+'">'+(x[0]=="error"?"❌":x[0]=="warn"?"⚠️":"ℹ️")+" "+escape(x[1])+"</div>").join(""):'<div class="info">✓ Keine Probleme gefunden.</div>';
+ status.textContent=a.some(x=>x[0]=="error")?"Prüfung beendet: Fehler gefunden.":"Prüfung beendet.";
+ status.className="status "+(a.some(x=>x[0]=="error")?"bad":"ok");return a;
+}
+function build(){return files.html.replace("</head>","<style>"+files.css+"</style></head>").replace("</body>","<script>"+files.js.replace(/<\/script>/gi,"<\\/script>")+"<\/script></body>")}
+function run(){sync();const a=check();if(a.some(x=>x[0]=="error"))return;frame.srcdoc=build();status.textContent="✓ Dein Code läuft jetzt in der Vorschau.";status.className="status ok"}
+function save(){sync();for(const k of Object.keys(files))localStorage.setItem("cfp_"+k,files[k]);status.textContent="✓ Projekt lokal gespeichert.";status.className="status ok"}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>{sync();cur=b.dataset.f;document.querySelectorAll(".tabs button").forEach(x=>x.classList.toggle("on",x===b));load()});
+ed.oninput=()=>{files[cur]=ed.value;nums.textContent=Array.from({length:Math.max(1,ed.value.split("\n").length)},(_,i)=>i+1).join("\n")};
+ed.onscroll=()=>nums.scrollTop=ed.scrollTop;
+document.getElementById("check").onclick=check;document.getElementById("run").onclick=run;document.getElementById("save").onclick=save;
+document.getElementById("new").onclick=()=>{if(confirm("Leeres Projekt erstellen?")){files={html:'<!doctype html>\n<html lang="de">\n<head><meta charset="utf-8"></head>\n<body>\n<h1>Mein Spiel</h1>\n</body>\n</html>',css:"",js:""};cur="html";load();check()}};
+document.getElementById("templates").onchange=e=>{const v=e.target.value;if(v){files={html:V[v].html,css:V[v].css,js:V[v].js};cur="html";load();check()}e.target.value=""};
+document.getElementById("tutorial").onclick=()=>document.getElementById("modal").classList.add("show");document.getElementById("close").onclick=()=>document.getElementById("modal").classList.remove("show");
+document.getElementById("clear").onclick=()=>{frame.srcdoc="";status.textContent="Vorschau geleert.";status.className="status"};
+load();check();
+</script></body></html>
