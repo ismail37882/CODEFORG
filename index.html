@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeForge</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#0f172a;
+  color:#f8fafc;
+}
+header{
+  padding:20px;
+  background:#111827;
+  border-bottom:1px solid #334155;
+}
+h1{margin:0 0 5px;font-size:28px}
+header p{margin:0;color:#94a3b8}
+main{max-width:1100px;margin:auto;padding:18px}
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+button,select{
+  border:0;
+  border-radius:10px;
+  padding:11px 15px;
+  font-size:15px;
+  background:#2563eb;
+  color:white;
+}
+button.secondary{background:#334155}
+select{background:#334155}
+.editor{
+  background:#020617;
+  border:1px solid #334155;
+  border-radius:12px;
+  overflow:hidden;
+}
+.editor-top{
+  padding:10px 14px;
+  background:#1e293b;
+  color:#cbd5e1;
+}
+textarea{
+  width:100%;
+  height:350px;
+  resize:vertical;
+  border:0;
+  outline:0;
+  padding:16px;
+  background:#020617;
+  color:#e2e8f0;
+  font:15px monospace;
+  line-height:1.5;
+}
+.box{
+  margin-top:15px;
+  background:#111827;
+  border:1px solid #334155;
+  border-radius:12px;
+  padding:16px;
+}
+#errors{white-space:pre-wrap}
+.good{color:#4ade80}
+.bad{color:#f87171}
+.warn{color:#facc15}
+iframe{
+  width:100%;
+  height:350px;
+  border:0;
+  background:white;
+  border-radius:8px;
+}
+.lesson{
+  display:none;
+  line-height:1.6;
+}
+.lesson.active{display:block}
+code{
+  background:#020617;
+  padding:3px 6px;
+  border-radius:5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>⚡ CodeForge</h1>
+  <p>Lerne programmieren – du schreibst den Code selbst.</p>
+</header>
+
+<main>
+
+<div class="toolbar">
+  <select id="language">
+    <option value="html">HTML</option>
+    <option value="css">CSS</option>
+    <option value="js">JavaScript</option>
+  </select>
+
+  <button onclick="checkCode()">🔍 Code prüfen</button>
+  <button onclick="runCode()">▶ Vorschau</button>
+  <button class="secondary" onclick="clearCode()">🗑 Löschen</button>
+</div>
+
+<div class="editor">
+  <div class="editor-top">Dein Code</div>
+  <textarea id="code" spellcheck="false"><!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  font-family: sans-serif;
+  text-align: center;
+  padding: 40px;
+}
+button {
+  padding: 12px 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Meine erste Website</h1>
+<p>Ich lerne programmieren!</p>
+
+<button onclick="hallo()">Klick mich</button>
+
+<script>
+function hallo() {
+  alert("Hallo!");
+}
+</script>
+
+</body>
+</html></textarea>
+</div>
+
+<div class="box">
+  <h2>🔍 Fehlerprüfung</h2>
+  <div id="errors">
+    Klicke auf „Code prüfen“.
+  </div>
+</div>
+
+<div class="box">
+  <h2>▶ Vorschau</h2>
+  <iframe id="preview" sandbox="allow-scripts"></iframe>
+</div>
+
+<div class="box">
+  <h2>📚 Tutorial</h2>
+
+  <select onchange="showLesson(this.value)">
+    <option value="html">HTML Grundlagen</option>
+    <option value="css">CSS Grundlagen</option>
+    <option value="js">JavaScript Grundlagen</option>
+    <option value="fehler">Fehler finden</option>
+  </select>
+
+  <div id="html" class="lesson active">
+    <h3>HTML</h3>
+    <p>HTML beschreibt den Aufbau einer Website.</p>
+    <p><code>&lt;h1&gt;Hallo&lt;/h1&gt;</code> erzeugt eine Überschrift.</p>
+    <p><code>&lt;p&gt;Text&lt;/p&gt;</code> erzeugt einen Absatz.</p>
+    <p><code>&lt;button&gt;Klick&lt;/button&gt;</code> erzeugt einen Button.</p>
+  </div>
+
+  <div id="css" class="lesson">
+    <h3>CSS</h3>
+    <p>CSS verändert das Aussehen deiner Website.</p>
+    <p>Zum Beispiel:</p>
+    <p><code>color: red;</code></p>
+    <p>Damit wird Text rot.</p>
+  </div>
+
+  <div id="js" class="lesson">
+    <h3>JavaScript</h3>
+    <p>JavaScript macht deine Website interaktiv.</p>
+    <p>Zum Beispiel:</p>
+    <p><code>alert("Hallo");</code></p>
+    <p>Damit erscheint eine Meldung.</p>
+  </div>
+
+  <div id="fehler" class="lesson">
+    <h3>Fehler finden</h3>
+    <p>CodeForge repariert deinen Code nicht automatisch.</p>
+    <p>Es zeigt dir nur mögliche Fehler und Hinweise.</p>
+    <p>Du entscheidest selbst, was du ändern möchtest.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+
+const codeBox = document.getElementById("code");
+const preview = document.getElementById("preview");
+const errors = document.getElementById("errors");
+
+function checkCode(){
+
+  const code = codeBox.value;
+  const language = document.getElementById("language").value;
+
+  let messages = [];
+
+  if(code.trim().length === 0){
+    messages.push("❌ Dein Code ist leer.");
+  }
+
+  if(language === "html"){
+
+    if(!code.includes("<html") && !code.includes("<!DOCTYPE")){
+      messages.push("⚠️ Hinweis: Es fehlt möglicherweise ein HTML-Grundgerüst.");
+    }
+
+    const opens = (code.match(/</g)||[]).length;
+    const closes = (code.match(/>/g)||[]).length;
+
+    if(opens !== closes){
+      messages.push("❌ Möglicherweise fehlt ein < oder >.");
+    }
+
+    const tags = ["html","head","body"];
+
+    tags.forEach(tag=>{
+      const open = code.match(new RegExp("<"+tag+"\\b","gi"));
+      const close = code.match(new RegExp("</"+tag+">","gi"));
+
+      if(open && (!close || open.length !== close.length)){
+        messages.push("❌ Möglicherweise ist <"+tag+"> nicht richtig geschlossen.");
+      }
+    });
+
+  }
+
+  if(language === "css"){
+
+    const open = (code.match(/{/g)||[]).length;
+    const close = (code.match(/}/g)||[]).length;
+
+    if(open !== close){
+      messages.push("❌ Bei CSS stimmen { und } wahrscheinlich nicht überein.");
+    }
+
+    if(code.includes(":") && !code.includes(";")){
+      messages.push("⚠️ Prüfe, ob nach deinen CSS-Eigenschaften ; stehen.");
+    }
+  }
+
+  if(language === "js"){
+
+    const open = (code.match(/{/g)||[]).length;
+    const close = (code.match(/}/g)||[]).length;
+
+    if(open !== close){
+      messages.push("❌ Bei JavaScript stimmen { und } wahrscheinlich nicht überein.");
+    }
+
+    const roundOpen = (code.match(/\(/g)||[]).length;
+    const roundClose = (code.match(/\)/g)||[]).length;
+
+    if(roundOpen !== roundClose){
+      messages.push("❌ Bei JavaScript stimmen ( und ) wahrscheinlich nicht überein.");
+    }
+  }
+
+  if(messages.length === 0){
+    errors.innerHTML =
+      '<span class="good">✅ Keine einfachen Fehler gefunden.</span><br><br>' +
+      'Das bedeutet nicht, dass der Code garantiert fehlerfrei ist. ' +
+      'Komplexe Fehler können trotzdem vorhanden sein.';
+  }else{
+    errors.innerHTML = messages.map(x=>x).join("\n\n");
+  }
+}
+
+function runCode(){
+
+  const language = document.getElementById("language").value;
+  const code = codeBox.value;
+
+  if(language === "html"){
+    preview.srcdoc = code;
+  }else{
+    preview.srcdoc =
+      "<!DOCTYPE html><html><head><style>" +
+      (language==="css" ? code : "") +
+      "</style></head><body>" +
+      (language==="js" ? "<script>"+code+"<\/script>" : "") +
+      "</body></html>";
+  }
+}
+
+function clearCode(){
+  if(confirm("Code wirklich löschen?")){
+    codeBox.value="";
+    errors.innerHTML="Code gelöscht.";
+    preview.srcdoc="";
+  }
+}
+
+function showLesson(id){
+
+  document.querySelectorAll(".lesson").forEach(x=>{
+    x.classList.remove("active");
+  });
+
+  document.getElementById(id).classList.add("active");
+}
+
+checkCode();
+runCode();
+
+</script>
+
+</body>
+</html>
